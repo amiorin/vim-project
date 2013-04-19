@@ -21,9 +21,8 @@ function! project#config#project(arg, ...)
     return
   endif
   let autocmd = "autocmd BufEnter ".event." lcd ".project." | let b:title = \"".title."\""
-  augroup vim_project
-    execute autocmd
-  augroup END
+  call insert(g:projects, autocmd)
+  call s:setup()
 endfunction
 
 function! project#config#project_path(arg, ...)
@@ -34,4 +33,17 @@ function! project#config#project_path(arg, ...)
     let title = fnamemodify(arg, ":t")
   endif
   call project#config#project(arg, title)
+endfunction
+
+function! s:setup()
+  augroup vim_project
+    autocmd!
+    for autocmd in g:projects
+      execute autocmd
+    endfor
+    if has("gui_running")
+      au BufEnter,BufRead,WinEnter * call TabTitle()
+      au BufEnter,BufRead,WinEnter * let &titlestring = getcwd()
+    endif
+  augroup END
 endfunction
