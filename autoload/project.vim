@@ -14,7 +14,6 @@ if has("gui_running")
   endfunction
 
   au VimEnter * set guitablabel=%-2.2N%{gettabvar(v:lnum,'title')}
-  set showtabline=2
   set title
 endif
 
