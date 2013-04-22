@@ -1,6 +1,6 @@
 ## About
 This plugin ``lcd`` to the root of the project everytime you ``BufEnter`` a
-file inside the project directory.
+file inside a project.
 
 ![img][0]
 
