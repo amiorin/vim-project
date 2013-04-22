@@ -1,6 +1,9 @@
 command! -nargs=+ Project
 \ call project#config#project(<args>)
 
+command! -nargs=+ File
+\ call project#config#title(<args>)
+
 command! -complete=file -nargs=+ ProjectPath
 \ call project#config#project_path(<f-args>)
 
