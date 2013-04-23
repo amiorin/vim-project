@@ -34,9 +34,9 @@ endfunction
 
 function! project#config#project_path(arg, ...) abort
   if len(a:000) > 0
-    call project#config#project(arg, title)
+    call project#config#project(a:arg, a:1)
   else
-    call project#config#project(arg)
+    call project#config#project(a:arg)
   endif
 endfunction
 
