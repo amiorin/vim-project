@@ -4,6 +4,9 @@ command! -nargs=+ Project
 command! -nargs=+ File
 \ call project#config#title(<args>)
 
+command! -nargs=+ Callback
+\ call project#config#callback(<args>)
+
 command! -complete=file -nargs=+ ProjectPath
 \ call project#config#project_path(<f-args>)
 
@@ -19,5 +22,4 @@ endif
 
 function! project#rc(...) abort
   let g:project_dir = len(a:000) > 0 ? expand(a:1, 1) : expand('$HOME', 1)
-  let g:projects = []
 endfunction
