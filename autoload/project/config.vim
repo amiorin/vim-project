@@ -19,9 +19,16 @@ function! project#config#project(arg, ...) abort
   call s:setup()
 endfunction
 
-function! project#config#callback(title, function) abort
+function! project#config#callback(title, callback) abort
+  if type(a:callback) == type([])
+    let callbacks = a:callback
+  else
+    let callbacks = [a:callback]
+  endif
   let project_or_filename = s:projects[a:title]
-  call add(project_or_filename["callbacks"], a:function)
+  for callback in callbacks
+    call add(project_or_filename["callbacks"], callback)
+  endfor
   call s:setup()
 endfunction
 
