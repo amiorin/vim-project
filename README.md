@@ -45,6 +45,7 @@ functions are callbacks and they are executed everytime a file nested in the
 of the project.
 * ``Welcome`` It's the [``Startify``](https://github.com/mhinz/vim-startify) equivalent.
 If you don't want ``Welcome`` to appear when you start vim:
+
 ```vim
 " before call project#rc()
 let g:project_enable_welcome = 0
@@ -52,6 +53,7 @@ let g:project_enable_welcome = 0
 set rtp+=~/.vim/bundle/vim-project/
 call project#rc("~/Code")
 ```
+
 ![Welcome](https://pbs.twimg.com/media/BJH4RgDCcAEYv4E.png:large)
 
 ## Install
