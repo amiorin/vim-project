@@ -49,6 +49,8 @@ If you don't want ``Welcome`` to appear when you start vim:
 ```vim
 " before call project#rc()
 let g:project_enable_welcome = 0
+" if you want the NERDTree integration.
+let g:project_use_nerdtree = 1
 
 set rtp+=~/.vim/bundle/vim-project/
 call project#rc("~/Code")
@@ -76,6 +78,7 @@ Windows: $HOME/vimfiles
 sample ``.vimrc``:
 
 ```vim
+let g:project_use_nerdtree = 1
 set rtp+=~/.vim/bundle/vim-project/
 call project#rc("~/Code")
 
@@ -121,7 +124,7 @@ From the ``cmdline mode``.
 ``ProjectPath`` uses the ``cwd`` and the arguments are not quoted.
 ```vim
 :ProjectPath .
-:ProjectPath /etc etcetera
+:ProjectPath /etc myconfig
 ```
 
 ## Self-Promotion

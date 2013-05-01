@@ -127,7 +127,11 @@ function! project#config#welcome() abort
     endif
     let line = printf(printf('   ['. cnt .']'.padding.'%s '.file, '%-'.max_title_length.'s'), v["title"])
     call append('$', line)
-    execute 'nnoremap <buffer> '. cnt .' :edit '. s:escape(file).lcd."<cr>"
+    if get(g:, 'project_use_nerdtree', 0) && isdirectory(file)
+      execute 'nnoremap <silent><buffer> '. cnt .' :enew \| NERDTree '. s:escape(file).lcd."<cr>"
+    else
+      execute 'nnoremap <silent><buffer> '. cnt .' :edit '. s:escape(file).lcd."<cr>"
+    endif
     let cnt += 1
     if cnt == 10
       let padding = ' '
