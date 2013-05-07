@@ -16,9 +16,11 @@ There are four commands :
 * ``Project``
 It's used inside the ``.vimrc``. The first parameter is the ``path`` to the
 project. The second parameter is optional and it is the ``title`` of the
-project.  If the ``path`` to the project is a relative path, it's combined
-with the ``starting path``.  The ``starting path`` is defined when you
-initialize the plugin :
+project and the default value of it is the last part of the name of the
+directory containing the project.  If the ``path`` to the project is a
+relative path, it's combined with the ``starting path``.  The ``starting
+path`` is defined when you initialize the plugin :
+
 ```vim
 set rtp+=~/.vim/bundle/vim-project/
 " custom starting path
@@ -26,6 +28,7 @@ call project#rc("~/Code")
 " default starting path (the home directory)
 call project#rc()
 ```
+
 * ``ProjectPath``
 It's used inside the ``cmdline mode``. The first parameter is the ``path``
 without quotation. The second parameter is optional and it is the ``title`` of
