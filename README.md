@@ -69,7 +69,7 @@ If you use [Pathogen][2], you just execute following:
 
 ```sh
 cd ~/.vim/bundle
-git https://github.com/amiorin/vim-project.git
+git clone https://github.com/amiorin/vim-project.git
 ```
 
 If you don't use either plugin management system, copy the `plugin` directory to your `.vim` directory.
