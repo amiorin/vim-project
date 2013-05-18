@@ -69,7 +69,7 @@ If you use [Pathogen][2], you just execute following:
 
 ```sh
 cd ~/.vim/bundle
-git https://github.com/amiorin/vim-project.git
+git clone https://github.com/amiorin/vim-project.git
 ```
 
 If you don't use either plugin management system, copy the `plugin` directory to your `.vim` directory.
@@ -141,3 +141,7 @@ Like this plugin?
 [0]: https://pbs.twimg.com/media/BIcCUupCMAEG8Lg.png:large
 [1]: https://github.com/gmarik/vundle.git
 [2]: https://github.com/tpope/vim-pathogen
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/amiorin/vim-project/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
