@@ -1,3 +1,6 @@
+## News
+* [Windows support added](https://twitter.com/amiorin/status/336003331984076800)
+
 ## Introduction
 A Project is made of :
 * One directory (the ``root of the project``)
