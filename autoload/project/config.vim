@@ -1,18 +1,25 @@
 let s:projects = {}
 let s:pos = 0
 
+function! s:full_path(arg) abort
+  let arg = substitute(a:arg, '\v\C/+$', '', '')
+  let arg = resolve(fnamemodify(arg, ":p"))
+  let arg = substitute(arg, '\v\C\\+$', '', '')
+  return arg
+endfunction
+
 function! project#config#project(arg, ...) abort
-  if a:arg[0] == "/" || a:arg[0] == "~"
-    let project = resolve(fnamemodify(a:arg, ":p"))
+  if a:arg[0] ==# "/" || a:arg[0] ==# "~" || a:arg[1] ==# ':'
+    let project = s:full_path(a:arg)
   else
-    let project = resolve(fnamemodify(g:project_dir."/".a:arg, ":p"))
+    let project = s:full_path(g:project_dir.s:get_sep().a:arg)
   endif
   if len(a:000) > 0
     let title = a:1
   else
     let title = fnamemodify(project, ":t")
   endif
-  let event = project."/*"
+  let event = project.s:get_sep()."*"
   if !isdirectory(project)
     return
   endif
@@ -35,9 +42,9 @@ function! project#config#callback(title, callback) abort
 endfunction
 
 function! project#config#title(filename, title) abort
-  let filename = resolve(fnamemodify(a:filename, ":p"))
+  let filename = s:full_path(a:filename)
   if !filereadable(filename)
-    let filename = resolve(fnamemodify(g:project_dir."/".a:filename, ":p"))
+    let filename = s:full_path(g:project_dir.s:get_sep().a:filename)
   endif
   if !filereadable(filename)
     return
@@ -49,10 +56,11 @@ function! project#config#title(filename, title) abort
 endfunction
 
 function! project#config#project_path(arg, ...) abort
+  let arg = s:full_path(a:arg)
   if len(a:000) > 0
-    call project#config#project(a:arg, a:1)
+    call project#config#project(arg, a:1)
   else
-    call project#config#project(a:arg)
+    call project#config#project(arg)
   endif
 endfunction
 
@@ -65,6 +73,10 @@ function! s:callback(title) abort
       execute "call ".callback."(\"".a:title."\")"
     endfor
   endif
+endfunction
+
+function! s:get_sep() abort
+  return project#config#get_sep()
 endfunction
 
 function! project#config#get_sep() abort
@@ -192,9 +204,9 @@ function! s:setup() abort
     let projects = sort(values(s:projects), "s:sort")
     for v in projects
       if v["type"] == "project"
-        let autocmd = "autocmd BufEnter ".v["event"]." lcd ".v["project"]." | let b:title = \"".v["title"]."\" | call s:callback(\"".v["title"]."\")"
+        let autocmd = "autocmd BufEnter ".s:back_to_slash(v["event"])." lcd ".v["project"]." | let b:title = \"".v["title"]."\" | call s:callback(\"".v["title"]."\")"
       else
-        let autocmd = "autocmd BufEnter ".v["event"]." let b:title = \"".v["title"]."\" | call s:callback(\"".v["title"]."\")"
+        let autocmd = "autocmd BufEnter ".s:back_to_slash(v["event"])." let b:title = \"".v["title"]."\" | call s:callback(\"".v["title"]."\")"
       endif
       execute autocmd
     endfor
@@ -203,4 +215,8 @@ function! s:setup() abort
       au BufEnter,BufRead,WinEnter * let &titlestring = getcwd()
     endif
   augroup END
+endfunction
+
+function! s:back_to_slash(string) abort
+  return substitute(a:string, '\v\C\\', '/', 'g')
 endfunction

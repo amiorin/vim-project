@@ -11,7 +11,7 @@ syntax  match  ProjectNumber   /\v\[[eq[:digit:]]+\]/hs=s+1,he=e-1 contains=Proj
 syntax  match  ProjectFile     /.*/ contains=ProjectBracket,ProjectNumber,ProjectTitle,ProjectPath,ProjectSpecial
 
 execute 'syntax match ProjectSlash /\'. s:sep .'/'
-execute 'syntax match ProjectPath /\'. s:sep . '.*\' . s:sep .'/ contains=ProjectSlash'
+execute 'syntax match ProjectPath /\(.:\)?\'. s:sep . '.*\' . s:sep .'/ contains=ProjectSlash'
 
 highlight projectPath ctermfg=11 ctermbg=8 guifg=#586e75
 highlight link ProjectFile    String
