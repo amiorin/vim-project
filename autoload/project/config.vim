@@ -210,9 +210,12 @@ function! s:setup() abort
       endif
       execute autocmd
     endfor
-    if has("gui_running")
-      au BufEnter,BufRead,WinEnter * call TabTitle()
-      au BufEnter,BufRead,WinEnter * let &titlestring = getcwd()
+    let set_title = get(g:, 'project_set_title', 1)
+    if set_title
+      if has("gui_running")
+        au BufEnter,BufRead,WinEnter * call TabTitle()
+        au BufEnter,BufRead,WinEnter * let &titlestring = getcwd()
+      endif
     endif
   augroup END
 endfunction
