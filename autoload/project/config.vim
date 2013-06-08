@@ -2,7 +2,8 @@ let s:projects = {}
 let s:pos = 0
 
 function! s:full_path(arg) abort
-  let arg = resolve(fnamemodify(a:arg, ":p"))
+  let arg = substitute(a:arg, '\v\C/+$', '', '')
+  let arg = resolve(fnamemodify(arg, ":p"))
   let arg = substitute(arg, '\v\C/+$', '', '')
   let arg = substitute(arg, '\v\C\\+$', '', '')
   return arg
@@ -62,6 +63,19 @@ function! project#config#project_path(arg, ...) abort
   else
     call project#config#project(arg)
   endif
+endfunction
+
+function! s:callbackString(title) abort
+  let project = s:projects[a:title]
+  let type = project["type"]
+  let callbacks = project["callbacks"]
+  let retval = []
+  if len(callbacks) > 0
+    for callback in callbacks
+      call add(retval, 'execute "call '.callback.'(\"'.a:title.'\")"')
+    endfor
+  endif
+  return join(retval, " \\| ")
 endfunction
 
 function! s:callback(title) abort
@@ -133,14 +147,16 @@ function! project#config#welcome() abort
     if v["type"] == "project"
       let file = v["project"]
       let lcd = " \\| lcd ".v["project"]
+      let callback = " \\| " . s:callbackString(v["title"])
     else
       let file = v["event"]
       let lcd = ""
+      let callback = ""
     endif
     let line = printf(printf('   ['. cnt .']'.padding.'%s '.file, '%-'.max_title_length.'s'), v["title"])
     call append('$', line)
     if get(g:, 'project_use_nerdtree', 0) && isdirectory(file)
-      execute 'nnoremap <silent><buffer> '. cnt .' :enew \| NERDTree '. s:escape(file).lcd."<cr>"
+      execute 'nnoremap <silent><buffer> '. cnt .' :enew '.lcd.callback.' \| NERDTree '. s:escape(file)."<cr>"
     else
       execute 'nnoremap <silent><buffer> '. cnt .' :edit '. s:escape(file).lcd."<cr>"
     endif
