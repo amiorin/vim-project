@@ -14,13 +14,17 @@ command! -nargs=0 -bar Welcome
 \ enew | call project#config#welcome()
 
 if has("gui_running")
-  function! TabTitle()
-    let title = expand("%:p:t")
-    let t:title = exists("b:title") ? b:title : title
-  endfunction
+    function! TabTitle()
+      if get(g:, 'project_enable_title_change', 1)
+        let title = expand("%:p:t")
+        let t:title = exists("b:title") ? b:title : title
+      endif
+    endfunction
 
-  au VimEnter * set guitablabel=%-2.2N%{gettabvar(v:lnum,'title')}
-  set title
+  if get(g:, 'project_enable_title_change', 1)
+    au VimEnter * set guitablabel=%-2.2N%{gettabvar(v:lnum,'title')}
+    set title
+  endif
 endif
 
 if get(g:, 'project_enable_welcome', 1)
