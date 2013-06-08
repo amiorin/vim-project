@@ -73,21 +73,25 @@ function ``project#config#callback`` accepts string or dictionary. If it's a
 dictionary, the method ``invoke(title)`` is called on the dictionary.
 
 ```vim
-" for more information
+" For more information on dictionary and prototype programming in vim :
 :h self
 ```
 
 The function ``project#utils#alternate`` can be used together with
 ``project#config#callback``. It returns a dictionary. This dictionary
-has a method ``invoke(title)`` that creates buffer local commands to
+has the method ``invoke(title)`` that creates ``<buffer>`` commands to
 switch to the alternate files like the plugin [vim-rake](https://github.com/tpope/vim-rake).
 
 ```vim
+" :A :AE :AS :AV :AT :AD :AR . They all accept the bang (!)
 " Remembet that the title of the project is only the last dir of the path
 Project  'nugg.ad/nuggad-compiler'
-" project#utils#alternate returns a dictionary with a method invoke.
+
+" project#utils#alternate returns a dictionary with a method ``invoke(title)``.
+"
 " everytime we open a file inside the project if the path starts with
 " ``spec`` or ``src`` the commands :A are defined.
+"
 " +_spec means add _spec to the file
 " -_spec means remove _spec to the file
 call project#config#callback("nuggad-compiler", project#utils#alternate(
