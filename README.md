@@ -1,7 +1,6 @@
 ## News
-* New feature ``project#utils#alternate``. To alternate between `file.ext` and
+* [New feature](#callbacks) ``project#utils#alternate``. To alternate between `file.ext` and
   ``file_suffix.ext`` or ``fileSuffix.ext`` with the command ``:A``
-  [More info](#callbacks)
 * [Windows support added](https://twitter.com/amiorin/status/336003331984076800)
 
 ## Introduction
@@ -68,7 +67,7 @@ call project#rc("~/Code")
 ![Welcome](https://pbs.twimg.com/media/BJH4RgDCcAEYv4E.png:large)
 
 ## Callbacks
-The command ``callback`` accepts a string (the name of the function). The
+The command ``Callback`` accepts a string (the name of the function). The
 function ``project#config#callback`` accepts string or dictionary. If it's a
 dictionary, the method ``invoke(title)`` is called on the dictionary.
 
