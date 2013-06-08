@@ -1,4 +1,7 @@
 ## News
+* New feature ``project#utils#alternate``. To alternate between `file.ext` and
+  ``file_suffix.ext`` or ``fileSuffix.ext`` with the command ``:A``
+  [More info](#callbacks)
 * [Windows support added](https://twitter.com/amiorin/status/336003331984076800)
 
 ## Introduction
@@ -63,6 +66,35 @@ call project#rc("~/Code")
 ```
 
 ![Welcome](https://pbs.twimg.com/media/BJH4RgDCcAEYv4E.png:large)
+
+## Callbacks
+The command ``callback`` accepts a string (the name of the function). The
+function ``project#config#callback`` accepts string or dictionary. If it's a
+dictionary, the method ``invoke(title)`` is called on the dictionary.
+
+```vim
+" for more information
+:h self
+```
+
+The function ``project#utils#alternate`` can be used together with
+``project#config#callback``. It returns a dictionary. This dictionary
+has a method ``invoke(title)`` that creates buffer local commands to
+switch to the alternate files like the plugin [vim-rake](https://github.com/tpope/vim-rake).
+
+```vim
+" Remembet that the title of the project is only the last dir of the path
+Project  'nugg.ad/nuggad-compiler'
+" project#utils#alternate returns a dictionary with a method invoke.
+" everytime we open a file inside the project if the path starts with
+" ``spec`` or ``src`` the commands :A are defined.
+" +_spec means add _spec to the file
+" -_spec means remove _spec to the file
+call project#config#callback("nuggad-compiler", project#utils#alternate(
+  \  [{'regex': '^src', 'string': 'spec', 'suffix': '+_spec'},
+  \   {'regex': '^spec', 'string': 'src', 'suffix': '-_spec'}]
+  \  ))
+```
 
 ## Install
 If you use [Vundle][1] you can install this plugin using Vim command `:BundleInstall amiorin/vim-project`.

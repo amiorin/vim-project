@@ -5,6 +5,7 @@ function! s:full_path(arg) abort
   let arg = substitute(a:arg, '\v\C/+$', '', '')
   let arg = resolve(fnamemodify(arg, ":p"))
   let arg = substitute(arg, '\v\C\\+$', '', '')
+  let arg = substitute(arg, '\v\C/+$', '', '')
   return arg
 endfunction
 
@@ -70,7 +71,11 @@ function! s:callback(title) abort
   let callbacks = project["callbacks"]
   if len(callbacks) > 0
     for callback in callbacks
-      execute "call ".callback."(\"".a:title."\")"
+      if type(callback) == type("")
+        execute "call ".callback."(\"".a:title."\")"
+      else
+        call callback.invoke(a:title)
+      endif
     endfor
   endif
 endfunction
