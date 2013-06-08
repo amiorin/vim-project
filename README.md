@@ -59,6 +59,8 @@ If you don't want ``Welcome`` to appear when you start vim:
 let g:project_enable_welcome = 0
 " if you want the NERDTree integration.
 let g:project_use_nerdtree = 1
+" if you want to suppress the gui title changes
+let g:project_enable_title_change = 0
 
 set rtp+=~/.vim/bundle/vim-project/
 call project#rc("~/Code")
