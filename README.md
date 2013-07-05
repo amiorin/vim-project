@@ -116,6 +116,26 @@ If you don't use either plugin management system, copy the `plugin` directory to
 Windows: $HOME/vimfiles
 
 ## Configure
+* Enable NERDTree integration.
+  ```vim
+  let g:project_use_nerdtree = 1
+  ```
+
+* Do not show the project browser as a buffer in the buffer list (uses ``nobuflisted``)
+  ```vim
+  let g:project_unlisted_buffer = 1
+  ```
+
+* Disable the project browsing screen on starting Vim
+  ```vim
+  let g:project_enable_welcome = 0
+  ```
+
+* Do not change tab titles to project names
+  ```vim
+  let g:project_disable_tab_title = 1
+  ```
+
 sample ``.vimrc``:
 
 ```vim

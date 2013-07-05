@@ -19,8 +19,11 @@ if has("gui_running")
     let t:title = exists("b:title") ? b:title : title
   endfunction
 
-  au VimEnter * set guitablabel=%-2.2N%{gettabvar(v:lnum,'title')}
-  set title
+
+  if get(g:, 'project_disable_tab_title') != 1
+    au VimEnter * set guitablabel=%-2.2N%{gettabvar(v:lnum,'title')}
+    set title
+  endif
 endif
 
 if get(g:, 'project_enable_welcome', 1)
