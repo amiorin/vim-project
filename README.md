@@ -1,4 +1,5 @@
 ## News
+* New command ``GoProject`` to select a project from the ``cmdline mode``
 * [New feature](#callbacks) ``project#utils#alternate``. To alternate between `file.ext` and
   ``file_suffix.ext`` or ``fileSuffix.ext`` with the command ``:A``
 * [Windows support added](https://twitter.com/amiorin/status/336003331984076800)
@@ -6,10 +7,10 @@
 ## Introduction
 A Project is made of :
 * One directory (the ``root of the project``)
-* One title (by default the last part of the the ``root of the project``)
+* One title (by default the last part of the ``root of the project``)
 * One or more ``callbacks``
 
-Everytime you open a file nested in the ``root of the project``
+Every time you open a file nested in the ``root of the project``
 * the ``local current directory`` is changed to the ``root of the project``
 * the ``guitablabel`` is set to the ``title`` of the project
 * the ``callbacks`` of the project are executed
@@ -17,7 +18,7 @@ Everytime you open a file nested in the ``root of the project``
 ![img][0]
 
 ## Commands
-There are four commands :
+There are five commands :
 * ``Project``
 It's used inside the ``.vimrc``. The first parameter is the ``path`` to the
 project. The second parameter is optional and it is the ``title`` of the
@@ -48,9 +49,13 @@ doesn't change the ``local current directory``.
 It's used inside the ``.vimrc``. The first parameter is the ``title`` of a
 project already defined with ``Project`` or ``File``. The second parameter is
 the name a function or an array of function names. This function or these
-functions are callbacks and they are executed everytime a file nested in the
+functions are callbacks and they are executed every time a file nested in the
 ``root of the project`` is opened with **one parameter** that is the ``title``
 of the project.
+* ``GoProject``
+It's used inside the ``cmdline mode`` to switch to one of the defined projects.
+The required parameter is the ``title`` of the project without quotation. Completion
+is supported.
 * ``Welcome`` It's the [``Startify``](https://github.com/mhinz/vim-startify) equivalent.
 If you don't want ``Welcome`` to appear when you start vim:
 
@@ -88,7 +93,7 @@ Project  'nugg.ad/nuggad-compiler'
 
 " project#utils#alternate returns a dictionary with a method ``invoke(title)``.
 "
-" everytime we open a file inside the project if the path starts with
+" every time we open a file inside the project if the path starts with
 " ``spec`` or ``src`` the commands :A are defined.
 "
 " +_spec means add _spec to the file

@@ -179,6 +179,30 @@ function! project#config#welcome() abort
   call cursor(special ? 4 : 2, 5)
 endfunction
 
+function! project#config#goto(title) abort
+  if has_key(s:projects, a:title)
+    let v = s:projects[a:title]
+    if v["type"] == "project"
+      let file = v["project"]
+      let lcd = " | lcd ".v["project"]
+    else
+      let file = v["event"]
+      let lcd = ""
+    endif
+    if get(g:, 'project_use_nerdtree', 0) && isdirectory(file)
+      execute 'enew | NERDTree '. s:escape(file).lcd
+    else
+      execute 'edit '. s:escape(file).lcd
+    endif
+  else
+    echo 'Unknown project ' . a:title
+  endif
+endfunction
+
+function! project#config#choices(ArgLead, CmdLine, CursorPos) abort
+  return join(sort(keys(s:projects)), "\n")
+endfunction
+
 function! s:escape(path) abort
   return !exists('+shellslash') || &shellslash ? fnameescape(a:path) : escape(a:path, '\')
 endfunction
