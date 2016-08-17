@@ -13,6 +13,9 @@ command! -complete=file -nargs=+ ProjectPath
 command! -nargs=0 -bar Welcome
 \ enew | call project#config#welcome()
 
+command! -nargs=1 -complete=custom,project#config#choices GoProject
+\ call project#config#goto(<q-args>)
+
 if has("gui_running")
   function! TabTitle()
     let title = expand("%:p:t")
