@@ -2,8 +2,8 @@ let s:projects = {}
 let s:pos = 0
 
 function! s:full_path(arg) abort
-  let arg = substitute(a:arg, '\v\C/+$', '', '')
-  let arg = resolve(fnamemodify(arg, ":p"))
+  let arg = resolve(fnamemodify(a:arg, ":p"))
+  let arg = substitute(arg, '\v\C/+$', '', '')
   let arg = substitute(arg, '\v\C\\+$', '', '')
   let arg = substitute(arg, '\v\C/+$', '', '')
   return arg
