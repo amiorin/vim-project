@@ -24,7 +24,7 @@ function! project#config#project(arg, ...) abort
   if !isdirectory(project)
     return
   endif
-  let s:projects[title] = { "type": "project", "event": event, "project": project, "title": title, "callbacks": [], "pos": s:pos}
+  let s:projects[title] = { "type": "project", "event": event, "project": project, "title": title, "callbacks": [], "init": "", "pos": s:pos}
   let s:pos += 1
   call s:setup()
 endfunction
@@ -42,6 +42,13 @@ function! project#config#callback(title, callback) abort
   call s:setup()
 endfunction
 
+function! project#config#init(title, callback) abort
+  " TODO allow many init functions? (this would be consistent with callbacks
+  " behavior)
+  let s:projects[a:title]["init"] = a:callback
+  call s:setup()
+endfunction
+
 function! project#config#title(filename, title) abort
   let filename = s:full_path(a:filename)
   if !filereadable(filename)
@@ -50,7 +57,7 @@ function! project#config#title(filename, title) abort
   if !filereadable(filename)
     return
   else
-    let s:projects[a:title] = { "type": "filename", "event": filename, "title": a:title, "callbacks": [], "pos": s:pos }
+    let s:projects[a:title] = { "type": "filename", "event": filename, "title": a:title, "callbacks": [], "init": "", "pos": s:pos }
     let s:pos += 1
     call s:setup()
   endif
@@ -145,7 +152,12 @@ function! project#config#welcome() abort
     let line = printf(printf('   ['. cnt .']'.padding.'%s '.file, '%-'.max_title_length.'s'), v["title"])
     call append('$', line)
     if get(g:, 'project_use_nerdtree', 0) && isdirectory(file)
-      execute 'nnoremap <silent><buffer> '. cnt .' :enew \| NERDTree '. s:escape(file).lcd."<cr>"
+      if (len(v['init']) > 0)
+        let inits = '\| call '.v['init'].'("'.v["title"].'")'
+      else
+        let inits = ''
+      endif
+      execute 'nnoremap <silent><buffer> '. cnt .' :enew '.inits.' \| NERDTree '. s:escape(file).lcd."<cr>"
     else
       execute 'nnoremap <silent><buffer> '. cnt .' :edit '. s:escape(file).lcd."<cr>"
     endif
