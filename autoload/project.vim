@@ -4,6 +4,9 @@ command! -nargs=+ Project
 command! -nargs=+ File
 \ call project#config#title(<args>)
 
+command! -nargs=+ Init
+\ enew | call project#config#init(<args>)
+
 command! -nargs=+ Callback
 \ call project#config#callback(<args>)
 

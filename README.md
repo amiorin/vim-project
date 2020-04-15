@@ -1,4 +1,5 @@
 ## News
+* New command Init
 * [New feature](#callbacks) ``project#utils#alternate``. To alternate between `file.ext` and
   ``file_suffix.ext`` or ``fileSuffix.ext`` with the command ``:A``
 * [Windows support added](https://twitter.com/amiorin/status/336003331984076800)
@@ -7,6 +8,7 @@
 A Project is made of :
 * One directory (the ``root of the project``)
 * One title (by default the last part of the the ``root of the project``)
+* One or more ``inits``
 * One or more ``callbacks``
 
 Everytime you open a file nested in the ``root of the project``
@@ -14,10 +16,13 @@ Everytime you open a file nested in the ``root of the project``
 * the ``guitablabel`` is set to the ``title`` of the project
 * the ``callbacks`` of the project are executed
 
+Every time you choose project on the welcome screen, the ``inits`` of the
+project are executed.
+
 ![img][0]
 
 ## Commands
-There are four commands :
+There are five commands :
 * ``Project``
 It's used inside the ``.vimrc``. The first parameter is the ``path`` to the
 project. The second parameter is optional and it is the ``title`` of the
@@ -51,6 +56,11 @@ the name a function or an array of function names. This function or these
 functions are callbacks and they are executed everytime a file nested in the
 ``root of the project`` is opened with **one parameter** that is the ``title``
 of the project.
+* ``Init``
+It's used inside the ``.vimrc``. It works just as the ``Callback`` command, except
+it is executed _once_ when project is selected on the welcome screen. If welcome
+screen is not used (that is, ``g:project_enable_welcome`` is set to 0), this
+command does nothing.
 * ``Welcome`` It's the [``Startify``](https://github.com/mhinz/vim-startify) equivalent.
 If you don't want ``Welcome`` to appear when you start vim:
 
@@ -145,7 +155,12 @@ Project  'glib'
 Project  'reloadlive'
 Project  'flashcards'
 Project  'leitner'
+Init     'leitner'                              , 'Murphy'
 Callback 'leitner'                              , ['AddSpecToPath', 'RemoveTextWidth']
+
+function! Murphy(title)
+  colorscheme murphy
+endfunction
 
 function! AddSpecToPath(tile) abort
   setlocal path+=spec

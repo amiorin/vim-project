@@ -24,7 +24,7 @@ function! project#config#project(arg, ...) abort
   if !isdirectory(project)
     return
   endif
-  let s:projects[title] = { "type": "project", "event": event, "project": project, "title": title, "callbacks": [], "pos": s:pos}
+  let s:projects[title] = { "type": "project", "event": event, "project": project, "title": title, "callbacks": [], "inits": [], "pos": s:pos}
   let s:pos += 1
   call s:setup()
 endfunction
@@ -42,6 +42,19 @@ function! project#config#callback(title, callback) abort
   call s:setup()
 endfunction
 
+function! project#config#init(title, callback) abort
+  if type(a:callback) == type([])
+    let callbacks = a:callback
+  else
+    let callbacks = [a:callback]
+  endif
+  let project_or_filename = s:projects[a:title]
+  for callback in callbacks
+    call add(project_or_filename["inits"], callback)
+  endfor
+  call s:setup()
+endfunction
+
 function! project#config#title(filename, title) abort
   let filename = s:full_path(a:filename)
   if !filereadable(filename)
@@ -50,7 +63,7 @@ function! project#config#title(filename, title) abort
   if !filereadable(filename)
     return
   else
-    let s:projects[a:title] = { "type": "filename", "event": filename, "title": a:title, "callbacks": [], "pos": s:pos }
+    let s:projects[a:title] = { "type": "filename", "event": filename, "title": a:title, "callbacks": [], "inits": [], "pos": s:pos }
     let s:pos += 1
     call s:setup()
   endif
@@ -144,10 +157,16 @@ function! project#config#welcome() abort
     endif
     let line = printf(printf('   ['. cnt .']'.padding.'%s '.file, '%-'.max_title_length.'s'), v["title"])
     call append('$', line)
+    let inits = ''
+    if (len(v['inits']) > 0)
+      for i in v['inits']
+        let inits = inits . ' \| call '.i.'("'.v["title"].'") '
+      endfor
+    endif
     if get(g:, 'project_use_nerdtree', 0) && isdirectory(file)
-      execute 'nnoremap <silent><buffer> '. cnt .' :enew \| NERDTree '. s:escape(file).lcd."<cr>"
+      execute 'nnoremap <silent><buffer> '. cnt .' :enew \| NERDTree '. s:escape(file).inits.lcd."<cr>"
     else
-      execute 'nnoremap <silent><buffer> '. cnt .' :edit '. s:escape(file).lcd."<cr>"
+      execute 'nnoremap <silent><buffer> '. cnt .' :edit '. s:escape(file).inits.lcd."<cr>"
     endif
     let cnt += 1
     if cnt == 10
