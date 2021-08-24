@@ -162,7 +162,7 @@ function! project#config#welcome() abort
 
   nnoremap <buffer><silent> n :enew <bar> startinsert<cr>
   nnoremap <buffer><silent> r :Oldfiles <cr>
-  nnoremap <buffer><silent> e :e ~/.vim/prj.txt	 <cr>
+  nnoremap <buffer><silent> e :e ~/.vim/plugged/vim-project/prj.txt	 <cr>
   nnoremap <buffer><silent> i :enew <bar> startinsert<cr>
   nnoremap <buffer><silent> <cr> :normal <c-r><c-w><cr>
   nnoremap <buffer><silent> <2-LeftMouse> :execute 'normal '. matchstr(getline('.'), '\w\+')<cr>
