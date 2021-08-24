@@ -110,14 +110,14 @@ function! project#config#welcome() abort
   let cnt = 0
 
   if special
-    call append('$', '   [e]  <empty buffer>')
+    call append('$',[ '   [n]  - New file','   [r]  - Recent files'])
   endif
 
   if special && len(s:projects)
     call append('$', '')
   endif
 
-  let padding = '  '
+  let padding = '  	'
   let projects = sort(values(s:projects), "s:sort")
   let max_title_length = 0
   let max_file_length = 0
@@ -154,14 +154,15 @@ function! project#config#welcome() abort
       let padding = ' '
     endif
   endfor
-
   if special
-    call append('$', ['', '   [q]  <quit>'])
+    call append('$',['','   [e]  - Edit Project List', '   [q]  - Quit'])
   endif
 
   setlocal nomodifiable nomodified
 
-  nnoremap <buffer><silent> e :enew<cr>
+  nnoremap <buffer><silent> n :enew <bar> startinsert<cr>
+  nnoremap <buffer><silent> r :Oldfiles <cr>
+  nnoremap <buffer><silent> e :e ~/.vim/prj.txt	 <cr>
   nnoremap <buffer><silent> i :enew <bar> startinsert<cr>
   nnoremap <buffer><silent> <cr> :normal <c-r><c-w><cr>
   nnoremap <buffer><silent> <2-LeftMouse> :execute 'normal '. matchstr(getline('.'), '\w\+')<cr>
