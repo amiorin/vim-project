@@ -110,7 +110,7 @@ function! project#config#welcome() abort
   let cnt = 0
 
   if special
-    call append('$',[ '   [n]  - New file','   [r]  - Recent files'])
+    call append('$','   [n]  - New file')
   endif
 
   if special && len(s:projects)
@@ -161,8 +161,7 @@ function! project#config#welcome() abort
   setlocal nomodifiable nomodified
 
   nnoremap <buffer><silent> n :enew <bar> startinsert<cr>
-  nnoremap <buffer><silent> r :Oldfiles <cr>
-  nnoremap <buffer><silent> e :e ~/.vim/plugged/vim-project/prj.txt	 <cr>
+  nnoremap <buffer><silent> e :e ~/.vim/bundle/vim-project/prj.txt	 <cr>
   nnoremap <buffer><silent> i :enew <bar> startinsert<cr>
   nnoremap <buffer><silent> <cr> :normal <c-r><c-w><cr>
   nnoremap <buffer><silent> <2-LeftMouse> :execute 'normal '. matchstr(getline('.'), '\w\+')<cr>
