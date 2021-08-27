@@ -175,7 +175,7 @@ function! project#config#welcome() abort
   endfor
 
   if special
-    call append('$', ['','   [e]   Edit Vimrc','   [c]   Configure Project', '   [q]  <quit>'])
+    call append('$', ['','   [c]   Configure Project','   [e]   Edit Vimrc', '   [q]  <quit>'])
   endif
 
   setlocal nomodifiable nomodified
