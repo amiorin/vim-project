@@ -24,7 +24,7 @@ function! project#config#project(arg, ...) abort
   if !isdirectory(project)
     return
   endif
-  let s:projects[title] = { "type": "project", "event": event, "project": project, "title": title, "callbacks": [], "pos": s:pos}
+  let s:projects[title] = { "type": "project", "event": event, "project": project, "title": title, "callbacks": [], "inits": [],"pos": s:pos}
   let s:pos += 1
   call s:setup()
 endfunction
@@ -42,6 +42,19 @@ function! project#config#callback(title, callback) abort
   call s:setup()
 endfunction
 
+function! project#config#init(title, callback) abort
+  if type(a:callback) == type([])
+    let callbacks = a:callback
+  else
+    let callbacks = [a:callback]
+  endif
+  let project_or_filename = s:projects[a:title]
+  for callback in callbacks
+    call add(project_or_filename["inits"], callback)
+  endfor
+  call s:setup()
+endfunction
+
 function! project#config#title(filename, title) abort
   let filename = s:full_path(a:filename)
   if !filereadable(filename)
@@ -50,7 +63,7 @@ function! project#config#title(filename, title) abort
   if !filereadable(filename)
     return
   else
-    let s:projects[a:title] = { "type": "filename", "event": filename, "title": a:title, "callbacks": [], "pos": s:pos }
+    let s:projects[a:title] = { "type": "filename", "event": filename, "title": a:title, "callbacks": [], "inits": [], "pos": s:pos }
     let s:pos += 1
     call s:setup()
   endif
@@ -110,14 +123,14 @@ function! project#config#welcome() abort
   let cnt = 0
 
   if special
-    call append('$','   [n]  - New file')
+    call append('$',['[Ctrl+e]   Open Recent files | [Ctrl+u]   Open files','   [n]  <Create new file>'])
   endif
 
   if special && len(s:projects)
     call append('$', '')
   endif
 
-  let padding = '  	'
+  let padding = '  '
   let projects = sort(values(s:projects), "s:sort")
   let max_title_length = 0
   let max_file_length = 0
@@ -144,25 +157,32 @@ function! project#config#welcome() abort
     endif
     let line = printf(printf('   ['. cnt .']'.padding.'%s '.file, '%-'.max_title_length.'s'), v["title"])
     call append('$', line)
+    let inits = ''
+    if (len(v['inits']) > 0)
+      for i in v['inits']
+        let inits = inits . ' \| call '.i.'("'.v["title"].'") '
+      endfor
+    endif
     if get(g:, 'project_use_nerdtree', 0) && isdirectory(file)
-      execute 'nnoremap <silent><buffer> '. cnt .' :enew \| NERDTree '. s:escape(file).lcd."<cr>"
+      execute 'nnoremap <silent><buffer> '. cnt .' :enew \| NERDTree '. s:escape(file).inits.lcd."<cr>"
     else
-      execute 'nnoremap <silent><buffer> '. cnt .' :edit '. s:escape(file).lcd."<cr>"
+      execute 'nnoremap <silent><buffer> '. cnt .' :edit '. s:escape(file).inits.lcd."<cr>"
     endif
     let cnt += 1
     if cnt == 10
       let padding = ' '
     endif
   endfor
+
   if special
-    call append('$',['','   [e]  - Edit Project List', '   [q]  - Quit'])
+    call append('$', ['','   [e]   Edit Vimrc','   [c]   Configure Project', '   [q]  <quit>'])
   endif
 
   setlocal nomodifiable nomodified
 
   nnoremap <buffer><silent> n :enew <bar> startinsert<cr>
-  nnoremap <buffer><silent> e :e ~/.vim/bundle/vim-project/prj.txt	 <cr>
-  nnoremap <buffer><silent> i :enew <bar> startinsert<cr>
+  nnoremap <buffer><silent> c :e ~/.vim/bundle/vim-project/prj.txt<bar> startinsert<cr>
+  nnoremap <buffer><silent> e :e ~/.vimrc<bar> startinsert<cr>
   nnoremap <buffer><silent> <cr> :normal <c-r><c-w><cr>
   nnoremap <buffer><silent> <2-LeftMouse> :execute 'normal '. matchstr(getline('.'), '\w\+')<cr>
   nnoremap <buffer><silent> q
@@ -177,6 +197,30 @@ function! project#config#welcome() abort
   augroup END
 
   call cursor(special ? 4 : 2, 5)
+endfunction
+
+function! project#config#goto(title) abort
+  if has_key(s:projects, a:title)
+    let v = s:projects[a:title]
+    if v["type"] == "project"
+      let file = v["project"]
+      let lcd = " | lcd ".v["project"]
+    else
+      let file = v["event"]
+      let lcd = ""
+    endif
+    if get(g:, 'project_use_nerdtree', 0) && isdirectory(file)
+      execute 'enew | NERDTree '. s:escape(file).lcd
+    else
+      execute 'edit '. s:escape(file).lcd
+    endif
+  else
+    echo 'Unknown project ' . a:title
+  endif
+endfunction
+
+function! project#config#choices(ArgLead, CmdLine, CursorPos) abort
+  return join(sort(keys(s:projects)), "\n")
 endfunction
 
 function! s:escape(path) abort
