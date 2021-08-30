@@ -4,6 +4,9 @@ command! -nargs=+ Project
 command! -nargs=+ File
 \ call project#config#title(<args>)
 
+command! -nargs=+ Init
+\ enew | call project#config#init(<args>)
+
 command! -nargs=+ Callback
 \ call project#config#callback(<args>)
 
@@ -12,6 +15,9 @@ command! -complete=file -nargs=+ ProjectPath
 
 command! -nargs=0 -bar Welcome
 \ enew | call project#config#welcome()
+
+command! -nargs=1 -complete=custom,project#config#choices GoProject
+\ call project#config#goto(<q-args>)
 
 if has("gui_running")
   function! TabTitle()

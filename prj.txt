@@ -1,0 +1,9 @@
+"" HELP TO ADD/EDIT PROJECTS OR FILES
+""Project 'Path','Title'
+"File 'Path of file '"
+Project 'guestbook'
+Project  '~/www/guestbook','guestbook'
+File     '~/www/guestbook/symfony.txt','Study Symfony from guestbook'
+Callback 'guestbook',['AddSpecToPath', 'RemoveTextWidth']
+
+Project  'symfony'
